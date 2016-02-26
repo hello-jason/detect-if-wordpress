@@ -10,6 +10,26 @@
 # bash wpdetect.sh example.com
 
 ####################
+# Make sure the right programs are available
+####################
+
+# cURL
+####################
+curl --version &> /dev/null
+if [[ "$?" -ne 0 ]]; then
+  echo "cURL is required. Please install it."
+  exit 1
+fi
+
+# grep
+####################
+grep --version &> /dev/null
+if [[ "$?" -ne 0 ]]; then
+  echo "grep is required. Please install it."
+  exit 1
+fi
+
+####################
 # Set variables
 ####################
 # set -xv
@@ -24,7 +44,7 @@ WHATIFOUND=""
 # Check for presence of /wp-login.php
 ####################
 
-HTTPSTATUSCODE=$(curl -L --write-out %{http_code} --silent --output /dev/null $1/wp-login.php)
+HTTPSTATUSCODE=$(curl -L --write-out %{http_code} --silent --output /dev/null $1/wp-admin)
 if [[ $HTTPSTATUSCODE = "200" ]]; then
   ISITWORDPRESS=1
   WHATIFOUND="$WHATIFOUND I found /wp-login.php."
@@ -42,10 +62,10 @@ fi
 # Well? Is it WordPress?
 ####################
 
-if [[ $ISITWORDPRESS = 0 ]]; then
-  echo -e "[\033[31m$1\e[0m] is probably not on WordPress"
-elif [[ $ISITWORDPRESS = 1 ]]; then
-  echo -e "[\033[32m$1\e[0m] is likely on WordPress"
+if [[ $ISITWORDPRESS == 0 ]]; then
+  echo -e "[\033[31m$1\e[0m] is probably not on WordPress."
+elif [[ $ISITWORDPRESS == 1 ]]; then
+  echo -e "[\033[32m$1\e[0m] is likely on WordPress."
   echo $WHATIFOUND
 else
   echo $ISITWORDPRESS - This should not have happened.

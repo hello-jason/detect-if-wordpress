@@ -25,7 +25,7 @@ WHATIFOUND=""
 ####################
 
 HTTPSTATUSCODE=$(curl -L --write-out %{http_code} --silent --output /dev/null $1/wp-login.php)
-if [ $HTTPSTATUSCODE = "200" ]; then
+if [[ $HTTPSTATUSCODE = "200" ]]; then
   ISITWORDPRESS=1
   WHATIFOUND="$WHATIFOUND I found /wp-login.php."
 fi

@@ -1,14 +1,17 @@
 # WordPress on WP Engine
-bash wpedetect.sh wpengine.com
+bash wpdetect.sh wpengine.com
 
 # Not a WordPress site
-bash wpedetect.sh google.com
+bash wpdetect.sh google.com
 
 # Bedrock WordPress
-bash wpedetect.sh roots.io
+bash wpdetect.sh roots.io
 
 # Bedrock WordPress
-bash wpedetect.sh immense.net
+bash wpdetect.sh immense.net
 
 # Not a WordPress site
-bash wpedetect.sh ebay.com
+bash wpdetect.sh ebay.com
+
+# WordPress
+bash lsu.edu

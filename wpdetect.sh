@@ -38,6 +38,15 @@ ISITWORDPRESS=0
 WHATIFOUND=""
 
 ####################
+# Validate the given URL
+####################
+URLSTATUSCODE=$(curl -L --write-out %{http_code} --silent --output /dev/null $1
+if [[ $URLSTATUSCODE != "200" ]]; then
+  echo "$1 is unreachable."
+  exit 1
+fi
+
+####################
 # Begin tests
 ####################
 
@@ -65,8 +74,7 @@ fi
 if [[ $ISITWORDPRESS == 0 ]]; then
   echo -e "[\033[31m$1\e[0m] is probably not on WordPress."
 elif [[ $ISITWORDPRESS == 1 ]]; then
-  echo -e "[\033[32m$1\e[0m] is likely on WordPress."
-  echo $WHATIFOUND
+  echo -e "[\033[32m$1\e[0m] is likely on WordPress.$WHATIFOUND"
 else
   echo $ISITWORDPRESS - This should not have happened.
 fi

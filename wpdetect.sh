@@ -40,9 +40,9 @@ WHATIFOUND=""
 ####################
 # Validate the given URL
 ####################
-URLSTATUSCODE=$(curl -L --write-out %{http_code} --silent --output /dev/null $1
+URLSTATUSCODE=$(curl -L --write-out %{http_code} --silent --output /dev/null $1)
 if [[ $URLSTATUSCODE != "200" ]]; then
-  echo "$1 is unreachable."
+  echo -e "[\033[31m$1\e[0m] is unreachable."
   exit 1
 fi
 

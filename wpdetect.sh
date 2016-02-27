@@ -67,7 +67,7 @@ HTTPSTATUSCODE=$(curl -L --write-out %{http_code} --silent --output /dev/null $U
 if [[ $HTTPSTATUSCODE = "200" ]]; then
   WHATIFOUND="$WHATIFOUND\n\tRedirected by \033[32m/wp-admin\e[0m."
   # If redirected, look for a form with an action to wp-login.php
-  curl -L --silent --output /dev/null $URLTOTEST | grep -q "<form(.*$URLTOTEST)(.*wp-login.php)"
+  curl -L --silent --output /dev/null $URLTOTEST/wp-admin | grep -q "<form(.*$URLTOTEST)(.*wp-login.php)"
   if [[ "$?" -ne 0 ]]; then
     ISITWORDPRESS=1
     WHATIFOUND="$WHATIFOUND\n\tFound a form with action \033[32mwp-login.php\e[0m."

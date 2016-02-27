@@ -10,8 +10,20 @@ bash wpdetect.sh roots.io
 # Bedrock WordPress
 bash wpdetect.sh immense.net
 
-# Not a WordPress site
+# Not WordPress
 bash wpdetect.sh ebay.com
 
 # WordPress
-bash lsu.edu
+bash wpdetect.sh lsu.edu
+
+# WordPress
+bash wpdetect.sh wordpress.com
+
+# WordPress
+bash wpdetect.sh gatorworks.net
+
+# Not WordPress
+bash wpdetect.sh amazon.com
+
+# Bedrock WordPress, Multisite
+bash wpdetect.sh www.lslbc.louisiana.gov

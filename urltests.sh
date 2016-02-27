@@ -27,3 +27,15 @@ bash wpdetect.sh amazon.com
 
 # Bedrock WordPress, Multisite
 bash wpdetect.sh www.lslbc.louisiana.gov
+
+# Old Magento
+bash wpdetect.sh dp-tuner.com
+
+# Newer Magento
+bash wpdetect.sh shopsweetsandtreats.com
+
+# WordPress
+bash wpdetect.sh blog.shopsweetsandtreats.com
+
+# Custom system
+bash wpdetect.sh hybrid-racing.com

@@ -40,8 +40,8 @@ fi
 ########################################
 # Set variables
 ########################################
-# Given URL to test
-URLTOTEST=$1
+# Given URL to test. Remove any trailing slashes.
+URLTOTEST=$(echo $1 | sed 's:/*$::')
 # Assume the site is not on WordPress, until proven otherwise
 ISITWORDPRESS=0
 # Log reasons that indicate a site is on WordPress
@@ -50,9 +50,9 @@ WHATIFOUND=""
 ########################################
 # Validate the given URL by checking for 200 status code
 ########################################
-URLSTATUSCODE=$(curl -L --write-out %{http_code} --silent --output /dev/null $1)
+URLSTATUSCODE=$(curl -L --write-out %{http_code} --silent --output /dev/null $URLTOTEST)
 if [[ $URLSTATUSCODE != "200" ]]; then
-  echo -e "[\033[31m$1\e[0m] is unreachable and cannot be tested."
+  echo -e "[\033[31m$URLTOTEST\e[0m] is unreachable and cannot be tested."
   exit 1
 fi
 
@@ -63,15 +63,15 @@ fi
 # 01. Check if /wp-admin redirects to a successful page.
 ########################################
 
-HTTPSTATUSCODE=$(curl -L --write-out %{http_code} --silent --output /dev/null $1/wp-admin)
+HTTPSTATUSCODE=$(curl -L --write-out %{http_code} --silent --output /dev/null $URLTOTEST/wp-admin)
 if [[ $HTTPSTATUSCODE = "200" ]]; then
   ISITWORDPRESS=1
   WHATIFOUND="$WHATIFOUND I found /wp-login.php."
 fi
 
-# 02. Check for presence of /wp-content directory
+# 02. Check for presence of /wp-content directory at the same URL we're testing
 ####################
-curl -L --silent $1 | grep -q 'wp-content'
+curl -L --silent $URLTOTEST | grep -q "$URLTOTEST\/wp-content"
 if [[ "$?" -ne 1 ]]; then
   ISITWORDPRESS=1
   WHATIFOUND="$WHATIFOUND I found the /wp-content directory."
@@ -82,9 +82,9 @@ fi
 ########################################
 
 if [[ $ISITWORDPRESS == 0 ]]; then
-  echo -e "[\033[31m$1\e[0m] is probably not on WordPress."
+  echo -e "[\033[31m$URLTOTEST\e[0m] is probably not on WordPress."
 elif [[ $ISITWORDPRESS == 1 ]]; then
-  echo -e "[\033[32m$1\e[0m] is likely on WordPress.$WHATIFOUND"
+  echo -e "[\033[32m$URLTOTEST\e[0m] is likely on WordPress.$WHATIFOUND"
 else
   # Fallback scenario, which should never happen
   echo -e "[\033[32mError\e[0m] - $ISITWORDPRESS - This should not have happened."

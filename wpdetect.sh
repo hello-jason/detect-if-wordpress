@@ -65,8 +65,13 @@ fi
 
 HTTPSTATUSCODE=$(curl -L --write-out %{http_code} --silent --output /dev/null $URLTOTEST/wp-admin)
 if [[ $HTTPSTATUSCODE = "200" ]]; then
-  ISITWORDPRESS=1
-  WHATIFOUND="$WHATIFOUND I found /wp-login.php."
+  WHATIFOUND="$WHATIFOUND\n\tRedirected by \033[32m/wp-admin\e[0m."
+  # If redirected, look for a form with an action to wp-login.php
+  curl -L --silent immense.net | grep -q "<form(.*$URLTOTEST)(.*wp-login.php)"
+  if [[ "$?" -ne 0 ]]; then
+    ISITWORDPRESS=1
+    WHATIFOUND="$WHATIFOUND\n\tFound a form with action \033[32mwp-login.php\e[0m."
+  fi
 fi
 
 # 02. Check for presence of /wp-content directory at the same URL we're testing
@@ -74,15 +79,14 @@ fi
 curl -L --silent $URLTOTEST | grep -q "$URLTOTEST\/wp-content"
 if [[ "$?" -ne 1 ]]; then
   ISITWORDPRESS=1
-  WHATIFOUND="$WHATIFOUND I found the /wp-content directory."
+  WHATIFOUND="$WHATIFOUND\n\tFound the \033[32m/wp-content\e[0m directory."
 fi
-
 ########################################
 # Well? Is it WordPress?
 ########################################
 
 if [[ $ISITWORDPRESS == 0 ]]; then
-  echo -e "[\033[31m$URLTOTEST\e[0m] is probably not on WordPress."
+  echo -e "[\033[31m$URLTOTEST\e[0m] is probably not on WordPress.$WHATIFOUND"
 elif [[ $ISITWORDPRESS == 1 ]]; then
   echo -e "[\033[32m$URLTOTEST\e[0m] is likely on WordPress.$WHATIFOUND"
 else

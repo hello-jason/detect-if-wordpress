@@ -3,55 +3,65 @@
 # Last Update: February 26, 2016
 #
 # Description: Bash script to determine if the given URL is on WordPress
+# Author: Jason Cross
+# Author URI: https://hellojason.net/
+# Repository: https://github.com/hello-jason/detect-if-wordpress
 
-####################
+########################################
 # Usage
-####################
+########################################
 # bash wpdetect.sh example.com
 
-####################
+########################################
 # Make sure the right programs are available
-####################
+########################################
 
-# cURL
-####################
+# cURL is required
+########################################
 curl --version &> /dev/null
 if [[ "$?" -ne 0 ]]; then
   echo "cURL is required. Please install it."
   exit 1
 fi
 
-# grep
-####################
+# grep is required
+########################################
 grep --version &> /dev/null
 if [[ "$?" -ne 0 ]]; then
   echo "grep is required. Please install it."
   exit 1
 fi
 
-####################
-# Set variables
-####################
+########################################
+# Uncomment for debugging
+########################################
 # set -xv
+
+########################################
+# Set variables
+########################################
+# Given URL to test
 URLTOTEST=$1
+# Assume the site is not on WordPress, until proven otherwise
 ISITWORDPRESS=0
+# Log reasons that indicate a site is on WordPress
 WHATIFOUND=""
 
-####################
-# Validate the given URL
-####################
+########################################
+# Validate the given URL by checking for 200 status code
+########################################
 URLSTATUSCODE=$(curl -L --write-out %{http_code} --silent --output /dev/null $1)
 if [[ $URLSTATUSCODE != "200" ]]; then
-  echo -e "[\033[31m$1\e[0m] is unreachable."
+  echo -e "[\033[31m$1\e[0m] is unreachable and cannot be tested."
   exit 1
 fi
 
-####################
+########################################
 # Begin tests
-####################
+########################################
 
-# Check for presence of /wp-login.php
-####################
+# 01. Check if /wp-admin redirects to a successful page.
+########################################
 
 HTTPSTATUSCODE=$(curl -L --write-out %{http_code} --silent --output /dev/null $1/wp-admin)
 if [[ $HTTPSTATUSCODE = "200" ]]; then
@@ -59,7 +69,7 @@ if [[ $HTTPSTATUSCODE = "200" ]]; then
   WHATIFOUND="$WHATIFOUND I found /wp-login.php."
 fi
 
-# Check for presence of /wp-content directory
+# 02. Check for presence of /wp-content directory
 ####################
 curl -L --silent $1 | grep -q 'wp-content'
 if [[ "$?" -ne 1 ]]; then
@@ -67,14 +77,16 @@ if [[ "$?" -ne 1 ]]; then
   WHATIFOUND="$WHATIFOUND I found the /wp-content directory."
 fi
 
-####################
+########################################
 # Well? Is it WordPress?
-####################
+########################################
 
 if [[ $ISITWORDPRESS == 0 ]]; then
   echo -e "[\033[31m$1\e[0m] is probably not on WordPress."
 elif [[ $ISITWORDPRESS == 1 ]]; then
   echo -e "[\033[32m$1\e[0m] is likely on WordPress.$WHATIFOUND"
 else
-  echo $ISITWORDPRESS - This should not have happened.
+  # Fallback scenario, which should never happen
+  echo -e "[\033[32mError\e[0m] - $ISITWORDPRESS - This should not have happened."
+  exit 1
 fi

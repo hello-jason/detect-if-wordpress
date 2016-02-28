@@ -10,7 +10,7 @@
 # Repository: https://github.com/hello-jason/detect-if-wordpress
 
 # Uncomment to debug
-# set -ex
+set -ex
 
 # Check at lest 1 argument is given
 if [ "$#" -lt 1 ]; then
@@ -100,9 +100,9 @@ function wordpress_tests() {
 
   HTTPSTATUSCODE=$(curl -L --write-out %{http_code} --silent --output /dev/null $URLTOTEST/wp-admin)
   if [[ $HTTPSTATUSCODE = "200" ]]; then
-    WHATIFOUND="$WHATIFOUND\n     | Redirected by \033[32m/wp-admin\e[0m."
+    WHATIFOUND="$WHATIFOUND\n     | Redirected by /wp-admin."
     # If redirected, look for a form with an action to wp-login.php
-    curl -L --silent --output /dev/null $URLTOTEST/wp-admin | grep -q "<form(.*$URLTOTEST)(.*wp-login.php)"
+    curl -L $URLTOTEST/wp-admin | grep "^<form.*$URLTOTEST.*wp-login.php"
     if [[ "$?" -ne 0 ]]; then
       ISITWORDPRESS=1
       WHATIFOUND="$WHATIFOUND\n     | Found a form with action \033[32mwp-login.php\e[0m."

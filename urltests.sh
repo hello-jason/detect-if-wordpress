@@ -31,6 +31,8 @@ SITESARRAY=(
   hybrid-racing.com
   # Magento
   technogym.com/us
+  # Crazy redirects
+  isitchristmasyet.com
 )
 
 # Iterate over each URL in the array

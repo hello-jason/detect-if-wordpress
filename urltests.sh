@@ -29,10 +29,12 @@ SITESARRAY=(
   blog.shopsweetsandtreats.com
   # Custom system
   hybrid-racing.com
-  # Magento
+  # Magento (but also WordPress?)
   technogym.com/us
   # Crazy redirects
   isitchristmasyet.com
+  # Not WordPress
+  stackoverflow.com
 )
 
 # Iterate over each URL in the array

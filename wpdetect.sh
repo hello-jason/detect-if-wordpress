@@ -1,8 +1,8 @@
 #!/bin/bash
 #
 # Is it WordPress?
-# Version: 0.1.0
-# Last Update: February 26, 2016
+# Version: 0.2.1
+# Last Update: February 28, 2016
 #
 # Description: Bash script to determine if the given URL is on WordPress
 # Author: Jason Cross
@@ -95,7 +95,7 @@ function wordpress_tests() {
   if [[ "$?" -eq 0 ]]; then
     WHATIFOUND="$WHATIFOUND\n     | 200 redirect by /wp-admin."
     # If redirected, look for a form with an action to wp-login.php
-    curl -L --silent $URLTOTEST/wp-admin | grep -q "<form.*$URLTOTEST.*wp-login.php"
+    curl -L --silent $URLTOTEST/wp-admin | grep -q "<form.*wp-login.php"
     if [[ "$?" -eq 0 ]]; then
       ISITWORDPRESS="Yes"
       WHATIFOUND="$WHATIFOUND\n     | Found a form with action \033[32mwp-login.php\e[0m."

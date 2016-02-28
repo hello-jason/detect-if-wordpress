@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Is it WordPress?
-# Version: 0.2.1
+# Version: 0.2.2
 # Last Update: February 28, 2016
 #
 # Description: Bash script to determine if the given URL is on WordPress

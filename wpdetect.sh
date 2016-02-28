@@ -41,7 +41,7 @@ function init() {
 function usage_help() {
   echo -e "
   Usage:
-   bash wpdetect.sh --url example.com
+   bash $0 --url example.com
 
   Options:
    -u, --url\t\tpass in URL (protocol optional)

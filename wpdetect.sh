@@ -7,41 +7,76 @@
 # Author URI: https://hellojason.net/
 # Repository: https://github.com/hello-jason/detect-if-wordpress
 
+# Check at lest 1 argument is given
+if [ "$#" -lt 1 ]
+then
+  echo -e "[\033[31mError\e[0m] Not enough arguments.\n        Usage: bash $0 --url example.com"
+  exit
+fi
+
 ########################################
-# Usage
+# Usage instructions
 ########################################
-# bash wpdetect.sh example.com
+HELPMANUAL="
+
+Usage:
+bash wpdetect.sh <url>
+
+Parse command options.
+
+Options:
+ -h, --help\tdisplay this help and exit
+
+For more details see: https://github.com/hello-jason/detect-if-wordpress
+"
 
 ########################################
 # Make sure the right programs are available
 ########################################
 
-# cURL is required
-########################################
-curl --version &> /dev/null
-if [[ "$?" -ne 0 ]]; then
-  echo "cURL is required. Please install it."
-  exit 1
-fi
+function check_required_programs () {
+  # Fake program for testing
+  ########################################
+  fakeprogram --version &> /dev/null
+  if [[ "$?" -ne 0 ]]; then
+    echo "fakeprogram is required. Please install it."
+    exit 1
+  fi
 
-# grep is required
-########################################
-grep --version &> /dev/null
-if [[ "$?" -ne 0 ]]; then
-  echo "grep is required. Please install it."
-  exit 1
-fi
+  # cURL is required
+  ########################################
+  curl --version &> /dev/null
+  if [[ "$?" -ne 0 ]]; then
+    echo "cURL is required. Please install it."
+    exit 1
+  fi
 
-########################################
-# Uncomment for debugging
-########################################
-# set -xv
+  # grep is required
+  ########################################
+  grep --version &> /dev/null
+  if [[ "$?" -ne 0 ]]; then
+    echo "grep is required. Please install it."
+    exit 1
+  fi
+
+  # getopt is required
+  ########################################
+  getopt --version &> /dev/null
+  if [[ "$?" -ne 0 ]]; then
+    echo "getopt is required. Please install it."
+    exit 1
+  fi
+}
 
 ########################################
 # Set variables
 ########################################
+# Incoming variables
 # Given URL to test. Remove any trailing slashes.
 URLTOTEST=$(echo $1 | sed 's:/*$::')
+# Allow user to pass in expected
+
+# Variables for testing
 # Assume the site is not on WordPress, until proven otherwise
 ISITWORDPRESS=0
 # Log reasons that indicate a site is on WordPress
@@ -100,6 +135,28 @@ elif [[ $ISITWORDPRESS == 1 ]]; then
   echo -e "[\033[32m$URLTOTEST\e[0m] is likely on WordPress.$WHATIFOUND"
 else
   # Fallback scenario, which should never happen
-  echo -e "[\033[32mError\e[0m] - $ISITWORDPRESS - This should not have happened."
+  echo -e "[\033[31mError\e[0m] - $ISITWORDPRESS - This should not have happened."
   exit 1
 fi
+
+########################################
+# Test input arguments
+########################################
+
+case "$1" in
+  # Show help manual to user
+  -h)
+    echo $HELPMANUAL
+    ;;
+  --help)
+    echo $HELPMANUAL
+    ;;
+  -d)
+    # Enable debugging
+    set -xv
+    ;;
+  -u)
+    # Make sure the required programs are available
+    check_required_programs
+    ;;
+esac

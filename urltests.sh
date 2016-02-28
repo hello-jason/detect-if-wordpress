@@ -39,3 +39,6 @@ bash wpdetect.sh blog.shopsweetsandtreats.com
 
 # Custom system
 bash wpdetect.sh hybrid-racing.com
+
+# Magento
+bash wpdetect.sh technogym.com/us
